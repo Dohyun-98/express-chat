@@ -1,12 +1,15 @@
 import express from "express";
+import http from "http";
 import fs from "fs";
 import { Server } from "socket.io";
 
 const app = express();
+const server = http.createServer(app);
 const port = 3000;
-const io = new Server(app, {
+const io = new Server(server, {
   // ...
 });
+
 app.use(express.static("src"));
 
 app.get("/", (req, res) => {
@@ -21,10 +24,10 @@ app.get("/", (req, res) => {
   });
 });
 
-io.sockets.on("connection", function (socket) {
+io.on("connection", (socket) => {
   console.log("connect");
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+server.listen(port, () => {
+  console.log("start server!");
 });
